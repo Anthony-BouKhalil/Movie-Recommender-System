@@ -8,16 +8,8 @@
 html,body {font-family:"Verdana",sans-serif}
 h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI",sans-serif}
 div { text-align: center; }
-
-.row {
-  display: flex;
-}
-
-.column {
-  flex: 50%;
-}
-
-
+.row { display: flex; } 
+.column { flex: 50%; }
 </style>
 <script src=""></script>
 <body>
@@ -26,31 +18,31 @@ div { text-align: center; }
         <div>
             <h1>Movie Recommender System</h1>
             <h2>Rank the movies you've seen from 0 (Bad) to 5 (Amazing)</h2>
-        </div><br><br>
+        </div>
         <div class="row">
             <div class="column">
-                <p>Movie 1 - Iron Man</p>
+                <p>Movie 0 - Iron Man</p>
+                <input name="movie0" value="None"><br><br>
+                <p>Movie 1 - Fast & Furious Presents: Hobbs & Shaw</p>
                 <input name="movie1" value="None"><br><br>
-                <p>Movie 2 - Fast & Furious Presents: Hobbs & Shaw</p>
+                <p>Movie 2 - Margin Call</p>
                 <input name="movie2" value="None"><br><br>
-                <p>Movie 3 - Margin Call</p>
+                <p>Movie 3 - Grown Ups</p>
                 <input name="movie3" value="None"><br><br>
-                <p>Movie 4 - Grown Ups</p>
+                <p>Movie 4 - Toy Story</p>
                 <input name="movie4" value="None"><br><br>
-                <p>Movie 5 - Toy Story</p>
-                <input name="movie5" value="None"><br><br>
             </div>
             <div class="column">
-                <p>Movie 6 - Extraction</p>
+                <p>Movie 5 - Extraction</p>
+                <input name="movie5" value="None"><br><br>
+                <p>Movie 6 - Ride Along</p>
                 <input name="movie6" value="None"><br><br>
-                <p>Movie 7 - Ride Along</p>
+                <p>Movie 7 - Rocky</p>
                 <input name="movie7" value="None"><br><br>
-                <p>Movie 8 - Rocky</p>
+                <p>Movie 8 - Tarzan</p>
                 <input name="movie8" value="None"><br><br>
-                <p>Movie 9 - Tarzan</p>
-                <input name="movie9" value="None"><br><br>
-                <p>Movie 10 - Catch Me If You Can</p>
-                <input name="movie10" value="None"><br><br>   
+                <p>Movie 9 - Catch Me If You Can</p>
+                <input name="movie9" value="None"><br><br>   
             </div>   
         </div>
         <div>
@@ -58,16 +50,14 @@ div { text-align: center; }
         </div> 
     </form>
     <div> 
-        <br><br>
         <p>Results Below after submit is clicked</p>
-        <p>Results are given as the movie numbers</p>
+        <b><p>Results are given as the movie numbers</p></b>
         <p>We recommnend you watch movie:</p>
         {% for movie in content %}     
         <script language="JavaScript">
             document.write("<p>" + {{ movie }} + "</p>");
         </script>
         {% endfor %}
-
     </div>
 
 </body>

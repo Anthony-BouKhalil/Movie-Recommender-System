@@ -3,7 +3,6 @@ from flask import Flask, request, render_template
   
 app = Flask(__name__)
 
-    
 @app.route('/')
 def my_form():
     return render_template('index.html')
@@ -11,6 +10,7 @@ def my_form():
 @app.route('/', methods=['POST'])
 def my_form_post():
     scores = []
+    scores.append(request.form['movie0'])
     scores.append(request.form['movie1'])
     scores.append(request.form['movie2'])
     scores.append(request.form['movie3'])
@@ -20,13 +20,10 @@ def my_form_post():
     scores.append(request.form['movie7'])
     scores.append(request.form['movie8'])
     scores.append(request.form['movie9'])
-    scores.append(request.form['movie10'])
     
     results = cf.create_matrix(scores)
-    results = ["1", "2", "4", "5"]
+    #results = ["1", "2", "4", "5"]
     return render_template('index.html', content="<p>" + "</p><p>".join(results) + "</p>")
 
 if __name__ == '__main__':
     app.run(debug=True)	
-
-    
