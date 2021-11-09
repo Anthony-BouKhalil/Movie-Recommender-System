@@ -1,3 +1,6 @@
+import math
+import copy
+
 def create_matrix(user_scores):
     matrix = [[0 for c in range(len(user_scores))] for r in range(26)]
     cosine_similarity_scores = [0 for i in range(26)]
@@ -12,8 +15,8 @@ def create_matrix(user_scores):
             if x != 0 or x != 1 or y != 0:
                 matrix[x-2][y-1] = element
     
-    row_mean_matrix = matrix
-    row_mean_user_scores = user_scores
+    row_mean_matrix = copy.deepcopy(matrix)
+    row_mean_user_scores = copy.deepcopy(user_scores)
 
     # Normalize ratings by subtracting mean rating for each user in dataset
     for x, row in enumerate(matrix):
@@ -47,9 +50,38 @@ def create_matrix(user_scores):
         else:
             row_mean_user_scores[x] = int(score) - accumulator/counter
 
-    #Try to use from sklearn.metrics.pairwise import cosine_similarity
-    #Implement my own implementation of cosine similarity
-    #for score in cosine_similarity_scores:
-    #    cosine_similarity_scores[score] = cosine_similarity([row_mean_user_scores], [row_mean_matrix[score]])
-    print(row_mean_user_scores)
-    return list(map(str, row_mean_user_scores))
+    # Cosine Similarity Scores:
+    for i in range (26):
+        cosine_similarity_scores[i] = cosine_similarity(row_mean_user_scores, row_mean_matrix[i], user_scores, matrix[i])
+    print(cosine_similarity_scores)
+    return list(map(str, cosine_similarity_scores))
+    
+
+def cosine_similarity(row_mean_user_scores, row_mean_matrix, user_scores, matrix):
+    # Mean rating for cosine similarity score
+    try:
+        numerator = 0
+        for x, score in enumerate(row_mean_user_scores):
+            numerator += score * row_mean_matrix[x]
+
+        user_scores_length = math.sqrt(sum([number ** 2 for number in row_mean_user_scores]))
+        dataset_scores_length = math.sqrt(sum([number ** 2 for number in row_mean_matrix]))
+
+        score = (numerator) / (user_scores_length * dataset_scores_length)
+        return score
+    # If all the user ratings are the same, mean rating will result in ZeroDivisionError
+    # Use regular ratings instead
+    except ZeroDivisionError:
+        print(user_scores)
+        print(matrix)
+        numerator = 0
+        for x, score in enumerate(matrix):
+            if type(matrix[x]) == int:
+                numerator += score * matrix[x]
+
+        user_scores_length = math.sqrt(sum([int(number) ** 2 for number in user_scores if number != 'None']))
+        dataset_scores_length = math.sqrt(sum([number ** 2 for number in matrix if type(number) == int]))
+
+        score = (numerator) / (user_scores_length * dataset_scores_length)
+        return score
+        
