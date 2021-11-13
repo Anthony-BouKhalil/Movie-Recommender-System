@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
+from . import collaborative_filter as cf
 
 views = Blueprint('views', __name__)
 
@@ -17,32 +18,16 @@ def movies():
     f.close()
 
     if request.method == 'POST':
-        scores = []
+        selected_movies = []
         ratings = []
-        scores.append(request.form['movie0'])
-        scores.append(request.form['movie1'])
-        scores.append(request.form['movie2'])
-        scores.append(request.form['movie3'])
-        scores.append(request.form['movie4'])
-        scores.append(request.form['movie5'])
-        scores.append(request.form['movie6'])
-        scores.append(request.form['movie7'])
-        scores.append(request.form['movie8'])
-        scores.append(request.form['movie9'])
+        for i in range(10):
+            selected_movies.append(request.form['movie' + str(i)])	
 
-        ratings.append(request.form['rating0'])
-        ratings.append(request.form['rating1'])
-        ratings.append(request.form['rating2'])
-        ratings.append(request.form['rating3'])
-        ratings.append(request.form['rating4'])
-        ratings.append(request.form['rating5'])
-        ratings.append(request.form['rating6'])
-        ratings.append(request.form['rating7'])
-        ratings.append(request.form['rating8'])
-        ratings.append(request.form['rating9'])
-        print(scores)
-        print(ratings)
-        return render_template("movies.html", user=current_user, movies=movies, scores=scores)
+        for i in range(10):
+            ratings.append(request.form['rating' + str(i)])	
+
+        results = cf.create_matrix(selected_movies, ratings, movies)
+        return render_template("movies.html", user=current_user, movies=movies, selected_movies=selected_movies, ratings=ratings)
     
     else:
         return render_template("movies.html", user=current_user, movies=movies)

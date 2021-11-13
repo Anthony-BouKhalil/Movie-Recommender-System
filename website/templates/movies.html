@@ -34,11 +34,16 @@
 
 
 <div align="center">
-  <button type="submit" class="btn btn-dark">Recommend Movies</button>
+  <button type="submit" class="btn btn-dark">Click Here for Recommended Movies</button>
 </div>
 </form>
+<br/>
+{% for selected_movie in selected_movies %}
+<p>{{ selected_movie }}</p>
+{% endfor %}
+<br/>
 
-{% for score in scores %}
-<p>{{ score }}</p>
+{% for rating in ratings %}
+<p>{{ rating }}</p>
 {% endfor %}
 {% endblock %}
