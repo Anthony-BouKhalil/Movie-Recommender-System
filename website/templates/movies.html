@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Movie Recommender System{% endblock %}
+{% block content %}
+
+<h1 align="center">Movies</h1>
+<br/>
+<form method="POST">
+<div class="row">
+  <div class="column">
+      <b><p>Movie Options</p></b>
+  </div>
+  <div class="column">
+    <b><p>Your Ratings</p></b> 
+  </div>   
+</div>
+
+<div align="center">
+{% for i in range(10) %}
+<select name="movie{{i}}" method="GET" action="/"  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+    <option value="{{movies[0]}}" selected>{{movies[0]}}</option>
+    {% for movie in movies[1:] %}
+    <option value="{{movie}}">{{movie}}</option>
+    {% endfor %}
+</select>
+
+<select name="rating{{i}}" class="form-select form-select-sm" aria-label=".form-select-sm example">
+  <option value="Haven't Seen" selected>Haven't Seen</option>
+  {% for i in range(6) %}
+  <option value="{{i}}">{{i}}</option>
+  {% endfor %}
+</select>
+{% endfor %}
+<br/><br/>
+
+
+<div align="center">
+  <button type="submit" class="btn btn-dark">Recommend Movies</button>
+</div>
+</form>
+
+{% for score in scores %}
+<p>{{ score }}</p>
+{% endfor %}
+{% endblock %}
