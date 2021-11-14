@@ -20,14 +20,21 @@ def movies():
     if request.method == 'POST':
         selected_movies = []
         ratings = []
+        inputs = []
+        
         for i in range(10):
             selected_movies.append(request.form['movie' + str(i)])	
 
         for i in range(10):
             ratings.append(request.form['rating' + str(i)])	
 
-        results = cf.create_matrix(selected_movies, ratings, movies)
-        return render_template("movies.html", user=current_user, movies=movies, selected_movies=selected_movies, ratings=ratings)
+        for i in range(10):
+            inputs.append("You gave " + selected_movies[i] + " a score of " + ratings[i])
+        
+
+        results = cf.main(selected_movies, ratings, movies)
+        return render_template("movies.html", user=current_user, movies=movies, selected_movies=selected_movies, ratings=ratings, \
+            inputs=inputs, results=results)
     
     else:
         return render_template("movies.html", user=current_user, movies=movies)

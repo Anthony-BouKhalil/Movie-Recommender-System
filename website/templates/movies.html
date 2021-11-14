@@ -16,7 +16,7 @@
 
 <div align="center">
 {% for i in range(10) %}
-<select name="movie{{i}}" method="GET" action="/"  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+<select name="movie{{i}}" method="GET" action="/" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
     <option value="{{movies[0]}}" selected>{{movies[0]}}</option>
     {% for movie in movies[1:] %}
     <option value="{{movie}}">{{movie}}</option>
@@ -32,18 +32,33 @@
 {% endfor %}
 <br/><br/>
 
-
 <div align="center">
   <button type="submit" class="btn btn-dark">Click Here for Recommended Movies</button>
 </div>
 </form>
 <br/>
-{% for selected_movie in selected_movies %}
-<p>{{ selected_movie }}</p>
-{% endfor %}
-<br/>
 
-{% for rating in ratings %}
-<p>{{ rating }}</p>
+<form method="GET" action="/">
+<div align="center">
+  <button type="submit" class="btn btn-danger">Clear Results</button>
+</div>
+</form>
+
+{% if selected_movies and ratings %}
+<b><p>Your Inputs:</p></b>
+{% for input in inputs %}
+{% if input[0:28] != "You gave Please Pick a Movie" and input[-12:] != "Haven't Seen" %}
+<p>{{ input }}</p>
+{% endif %}
 {% endfor %}
+{% endif %}
+
+{% if results %}
+<b><p>Your Results:</p></b>
+
+{% for result in results %}
+<p>{{ result }}</p>
+{% endfor %}
+{% endif %}
+<br/>
 {% endblock %}

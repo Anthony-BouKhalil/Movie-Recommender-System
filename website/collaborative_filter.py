@@ -1,5 +1,30 @@
 import math
 
+def main(selected_movie, ratings, movies):
+    matrix, user_ratings = create_matrix(selected_movie, ratings, movies)
+    averages = calculate_average(matrix, user_ratings)
+
+    """
+    Make into helper functions
+    """
+    # TODO:
+        # Generate a results file for the user similarity matrix (can print to a .txt file as a matrix)
+        # Mention all from imported data, none from my own user input
+    # TODO:
+    # Similarity_scores = [0 for i in range(943)]
+    # Calculate the similarity score between the user and each user in the matrix (data set)
+
+    # If similarity score (Pearson correlation coefficient) is greater than 0.5 or 0 (see what works better), 
+    # matrix user scores will be used
+    
+    # After all users have been compared
+    # Then for every movie the user hasn't seen
+    # compute the (score = weighted sum) for the user and all the positive correlation user scores
+
+    # Return the movies with the top 3 highest scores (try other top K values) that have a score greater than 3.5 (test this num with others maybe)
+
+    return None
+
 def create_matrix(selected_movie, ratings, movies):
     """
     TODO:
@@ -16,7 +41,7 @@ def create_matrix(selected_movie, ratings, movies):
     """
     # len(movies)-1 because the first movie is 'Please Pick a Movie'
     matrix = [[0 for c in range(len(movies)-1)] for r in range(943)]
-    similarity_scores = [0 for i in range(943)]
+    
     user_ratings = []
 
     # User Scores
@@ -41,24 +66,25 @@ def create_matrix(selected_movie, ratings, movies):
         matrix[movie][user_id] = user_rating
     f.close()
 
-    """
-    Make into helper functions
-    """
-    # TODO:
-        # Generate a results file for the user similarity matrix (can print to a .txt file as a matrix)
-        # Mention all from imported data, none from my own user input
-    # TODO:
-    # Calculate the average for user and each user in the matrix (data set) with only the movies that the have both rated
-    # Calculate the similarity score between the user and each user in the matrix (data set)
+    return matrix, user_ratings
 
-    # If similarity score (Pearson correlation coefficient) is greater than 0.5 or 0 (see what works better), 
-    # matrix user scores will be used
+
+def calculate_average(matrix, user_ratings):
+    averages = [0 for i in range(943)]
+    user_scores_index = []
+
+    for i, score in enumerate(user_ratings):
+        if score != 'None':
+            user_scores_index.append(i)
+
+    for i, user in enumerate(matrix):
+        counter = 0
+        for j, score in enumerate(user):
+            # No user ratings gave a score of 0, dataset is ratings from 1 to 5
+            if score != 0 and j in user_scores_index:
+                averages[i] += int(score)
+                counter += 1
+        if counter > 0:
+            averages[i] = averages[i] / counter
     
-    # After all users have been compared
-    # Then for every movie the user hasn't seen
-    # compute the (score = weighted sum) for the user and all the positive correlation user scores
-
-    # Return the movies with the top 3 highest scores (try other top K values) that have a score greater than 3.5 (test this num with others maybe)
-
-
-    return None
+    return averages
