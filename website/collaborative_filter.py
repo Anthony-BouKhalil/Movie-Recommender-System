@@ -1,8 +1,11 @@
 import math
 
-def main(selected_movie, ratings, movies):
-    matrix, user_ratings = create_matrix(selected_movie, ratings, movies)
-    averages = calculate_average(matrix, user_ratings)
+def main(selected_movies, ratings, movies):
+    matrix, user_ratings = create_matrix(selected_movies, ratings, movies)
+    averages, user_scores_index = calculate_average(matrix, user_ratings)
+    similarity_scores = calculate_similarity_scores(matrix, user_ratings, averages, user_scores_index)
+
+    #I will use positive sim scores (> 0)
 
     """
     Make into helper functions
@@ -25,7 +28,7 @@ def main(selected_movie, ratings, movies):
 
     return None
 
-def create_matrix(selected_movie, ratings, movies):
+def create_matrix(selected_movies, ratings, movies):
     """
     TODO:
     Add code in view.py for 
@@ -47,8 +50,8 @@ def create_matrix(selected_movie, ratings, movies):
     # User Scores
     # movies[:1] because the first movie is 'Please Pick a Movie'
     for movie in movies[1:]:
-        if movie in selected_movie:
-            user_ratings.append(ratings[selected_movie.index(movie)])
+        if movie in selected_movies:
+            user_ratings.append(ratings[selected_movies.index(movie)])
         else:
             user_ratings.append('None')
 
@@ -87,4 +90,32 @@ def calculate_average(matrix, user_ratings):
         if counter > 0:
             averages[i] = averages[i] / counter
     
-    return averages
+    return averages, user_scores_index
+
+
+def calculate_similarity_scores(matrix, user_ratings, averages, user_scores_index):
+    numerator = 0
+    denominator = 0
+    similarity_scores = [0 for i in range(943)]
+
+    for i, user in enumerate(matrix):
+        counter = 0
+        for j, score in enumerate(user):
+            # No user ratings gave a score of 0, dataset is ratings from 1 to 5
+            if score != 0 and j in user_scores_index:
+                counter += 1
+                numerator += (int(score) - averages[i]) * (int(user_ratings[j]) - averages[i])
+                denominator += math.sqrt(math.pow(int(score) - averages[i], 2)) * math.sqrt(math.pow(int(user_ratings[j]) - averages[i], 2))
+        try:
+            similarity_scores[i] = numerator / denominator
+        except ZeroDivisionError:
+            similarity_scores[i] = 0
+
+
+    print(sorted(similarity_scores, reverse=True))
+    return similarity_scores
+
+
+
+def calculate_weighted_sum_rating(matrix, similarity_scores):
+    pass
