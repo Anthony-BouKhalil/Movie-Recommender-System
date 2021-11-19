@@ -5,7 +5,7 @@ def main(selected_movies, ratings, movies):
     averages, user_scores_index = calculate_average(matrix, user_ratings)
     similarity_scores = calculate_similarity_scores(matrix, user_ratings, averages, user_scores_index)
 
-    #I will use positive sim scores (> 0)
+    #I will use positive sim scores (> 0.1)
 
     """
     Make into helper functions
