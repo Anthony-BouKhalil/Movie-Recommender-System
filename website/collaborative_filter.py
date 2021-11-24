@@ -47,12 +47,11 @@ def create_matrix(selected_movies, ratings, movies):
         # user id | item id | rating | timestamp
         line = line.split()
         # int(line[0])-1 because the index of the movies row in matrix starts at 0
-        movie = int(line[0])-1
+        movie = int(line[1])-1
         # int(line[1])-1 because the index of the user column in matrix starts at 0
-        user_id = int(line[1])-1
+        user_id = int(line[0])-1
         user_rating = int(line[2])
-        """Fix should be [user_id][movie], might have messed up averages"""
-        matrix[movie][user_id] = user_rating
+        matrix[user_id][movie] = user_rating
     f.close()
 
     return matrix, user_ratings
@@ -105,16 +104,20 @@ def calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores):
     movie_scores = [0 for i in range(1682)]
     denominator = [0 for i in range(1682)]
 
-    for i, movie in enumerate(matrix):
-        for j, user_score in enumerate(movie):
-            #The user rated that movie, don't want to recommend it
-            if j not in user_scores_index and similarity_scores[i] > 0:
-                numerator[i] += similarity_scores[i] * int(user_score)
-                denominator[i] += similarity_scores[i]
 
+    #Transpose matrix
+    transposed_matrix = [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]
+    for x in range(1682):
+        #The user rated that movie, don't want to recommend it
+        if x in user_scores_index:
+            continue
+        for y in range(943):
+            if similarity_scores[y] > 0:
+                numerator[x] += similarity_scores[y] * int(transposed_matrix[x][y]) 
+                denominator[x] += similarity_scores[y]
         try:
-            movie_scores[i] = numerator[i] / denominator[i]
+            movie_scores[x] = numerator[x] / denominator[x]
         except ZeroDivisionError:
-            movie_scores[i] = 0
+            movie_scores[x] = 0
 
     return movie_scores    
