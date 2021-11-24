@@ -4,26 +4,11 @@ def main(selected_movies, ratings, movies):
     matrix, user_ratings = create_matrix(selected_movies, ratings, movies)
     averages, user_scores_index = calculate_average(matrix, user_ratings)
     similarity_scores = calculate_similarity_scores(matrix, user_ratings, averages, user_scores_index)
+    movie_scores = calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores)
+    print(movie_scores)
+    print(sorted(movie_scores, reverse=True))
 
-    #I will use positive sim scores (> 0.1)
-
-    """
-    Make into helper functions
-    """
     # TODO:
-        # Generate a results file for the user similarity matrix (can print to a .txt file as a matrix)
-        # Mention all from imported data, none from my own user input
-    # TODO:
-    # Similarity_scores = [0 for i in range(943)]
-    # Calculate the similarity score between the user and each user in the matrix (data set)
-
-    # If similarity score (Pearson correlation coefficient) is greater than 0.5 or 0 (see what works better), 
-    # matrix user scores will be used
-    
-    # After all users have been compared
-    # Then for every movie the user hasn't seen
-    # compute the (score = weighted sum) for the user and all the positive correlation user scores
-
     # Return the movies with the top 3 highest scores (try other top K values) that have a score greater than 3.5 (test this num with others maybe)
 
     return None
@@ -66,6 +51,7 @@ def create_matrix(selected_movies, ratings, movies):
         # int(line[1])-1 because the index of the user column in matrix starts at 0
         user_id = int(line[1])-1
         user_rating = int(line[2])
+        """Fix should be [user_id][movie], might have messed up averages"""
         matrix[movie][user_id] = user_rating
     f.close()
 
@@ -99,11 +85,9 @@ def calculate_similarity_scores(matrix, user_ratings, averages, user_scores_inde
     similarity_scores = [0 for i in range(943)]
 
     for i, user in enumerate(matrix):
-        counter = 0
         for j, score in enumerate(user):
             # No user ratings gave a score of 0, dataset is ratings from 1 to 5
             if score != 0 and j in user_scores_index:
-                counter += 1
                 numerator += (int(score) - averages[i]) * (int(user_ratings[j]) - averages[i])
                 denominator += math.sqrt(math.pow(int(score) - averages[i], 2)) * math.sqrt(math.pow(int(user_ratings[j]) - averages[i], 2))
         try:
@@ -116,6 +100,21 @@ def calculate_similarity_scores(matrix, user_ratings, averages, user_scores_inde
     return similarity_scores
 
 
+def calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores):
+    numerator = [0 for i in range(1682)]
+    movie_scores = [0 for i in range(1682)]
+    denominator = [0 for i in range(1682)]
 
-def calculate_weighted_sum_rating(matrix, similarity_scores):
-    pass
+    for i, movie in enumerate(matrix):
+        for j, user_score in enumerate(movie):
+            #The user rated that movie, don't want to recommend it
+            if j not in user_scores_index and similarity_scores[i] > 0:
+                numerator[i] += similarity_scores[i] * int(user_score)
+                denominator[i] += similarity_scores[i]
+
+        try:
+            movie_scores[i] = numerator[i] / denominator[i]
+        except ZeroDivisionError:
+            movie_scores[i] = 0
+
+    return movie_scores    
