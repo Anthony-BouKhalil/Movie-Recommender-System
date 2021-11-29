@@ -29,19 +29,6 @@ def main(selected_movies, ratings, movies):
     return movie_names + scores
 
 def create_matrix(selected_movies, ratings, movies):
-    """
-    TODO:
-    Add code in view.py for 
-    @views.route('/', methods=['GET', 'POST'])
-    @login_required
-    def movies():
-    if request.method == 'POST':
-    Put ratings in a set, if only 2 inputs, do not allow (flash error category msg) will result in Division by zero
-    Can just say to the user, "Not all ratings can be the same"
-    Another Case: "You need to rate at least 2 movies"
-    I may need to check to see if the movie & rating combo is filled (if one is changed, the other should be as well) 
-        -specifically at least 2 ratings should be filled but they should also have movies picked (that are unique) 
-    """
     # len(movies)-1 because the first movie is 'Please Pick a Movie'
     matrix = [[0 for c in range(len(movies)-1)] for r in range(943)]
     
@@ -119,7 +106,6 @@ def calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores):
     movie_scores = [0 for i in range(1682)]
     denominator = [0 for i in range(1682)]
 
-
     #Transpose matrix
     transposed_matrix = [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]
     for x in range(1682):
@@ -135,4 +121,5 @@ def calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores):
         except ZeroDivisionError:
             movie_scores[x] = 0
 
+    print(sorted(movie_scores, reverse=True))
     return movie_scores    

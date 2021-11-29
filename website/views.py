@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 from flask_login import login_required, current_user
 from . import collaborative_filter as cf
 
@@ -30,10 +30,17 @@ def movies():
             ratings.append(request.form['rating' + str(i)])	
 
         for i in range(20):
+            if selected_movies[i] == "Please Pick a Movie" and ratings[i] != "Haven't Seen":
+                flash('If a rating is picked, it needs a corresponding rating!', category='error')
+                return render_template("movies.html", user=current_user, movies=movies)
+            elif selected_movies[i] != "Please Pick a Movie" and ratings[i] == "Haven't Seen":
+                flash('If a movie is picked, it needs a corresponding movie!', category='error')
+                return render_template("movies.html", user=current_user, movies=movies)
+        
+        for i in range(20):
             inputs.append("You gave " + selected_movies[i] + " a score of " + ratings[i])
         
         results = cf.main(selected_movies, ratings, movies)
-        print(results)
 
         if results != None:
             for i in range(3):
