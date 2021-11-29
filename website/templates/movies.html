@@ -15,7 +15,7 @@
 </div>
 
 <div align="center">
-{% for i in range(10) %}
+{% for i in range(20) %}
 <select name="movie{{i}}" method="GET" action="/" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
     <option value="{{movies[0]}}" selected>{{movies[0]}}</option>
     {% for movie in movies[1:] %}
@@ -53,12 +53,11 @@
 {% endfor %}
 {% endif %}
 
-{% if results %}
 <b><p>Your Results:</p></b>
 
-{% for result in results %}
-<p>{{ result }}</p>
+{% for out in output %}
+<p>{{ out }}</p>
 {% endfor %}
-{% endif %}
+
 <br/>
 {% endblock %}

@@ -21,20 +21,29 @@ def movies():
         selected_movies = []
         ratings = []
         inputs = []
+        output = []
         
-        for i in range(10):
+        for i in range(20):
             selected_movies.append(request.form['movie' + str(i)])	
 
-        for i in range(10):
+        for i in range(20):
             ratings.append(request.form['rating' + str(i)])	
 
-        for i in range(10):
+        for i in range(20):
             inputs.append("You gave " + selected_movies[i] + " a score of " + ratings[i])
         
-
         results = cf.main(selected_movies, ratings, movies)
+        print(results)
+
+        if results != None:
+            for i in range(3):
+                output.append(results[i] + " is recommended for you because based on your inputs we believe you would give it a score of " + str(round(results[i+3], 2)) + " out of 5")
+
+        if len(output) == 0:
+            output.append("No recommendations found")
+
         return render_template("movies.html", user=current_user, movies=movies, selected_movies=selected_movies, ratings=ratings, \
-            inputs=inputs, results=results)
+            inputs=inputs, results=results, output=output)
     
     else:
         return render_template("movies.html", user=current_user, movies=movies)

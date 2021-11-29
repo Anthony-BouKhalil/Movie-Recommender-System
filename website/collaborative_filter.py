@@ -1,17 +1,32 @@
 import math
+import collections
 
 def main(selected_movies, ratings, movies):
+    dictionary = {}
+    scores = []
+    movie_names = []
+
     matrix, user_ratings = create_matrix(selected_movies, ratings, movies)
     averages, user_scores_index = calculate_average(matrix, user_ratings)
     similarity_scores = calculate_similarity_scores(matrix, user_ratings, averages, user_scores_index)
     movie_scores = calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores)
-    print(movie_scores)
-    print(sorted(movie_scores, reverse=True))
 
-    # TODO:
-    # Return the movies with the top 3 highest scores (try other top K values) that have a score greater than 3.5 (test this num with others maybe)
+    for i, score in enumerate(movie_scores):
+        dictionary[score] = i
 
-    return None
+    sorted_dictionary = collections.OrderedDict(sorted(dictionary.items(), reverse=True))
+    top_three = list(sorted_dictionary.keys())[0:3]
+
+    for top_k in top_three:
+        # dictionary[top_k]+1 because movies[0] is 'Please Pick a Movie'
+        if top_k != 0:
+            scores.append(top_k)
+            movie_names.append(movies[dictionary[top_k]+1])
+            print(top_k, " ", movies[dictionary[top_k]+1])
+        else:
+            return None
+
+    return movie_names + scores
 
 def create_matrix(selected_movies, ratings, movies):
     """
@@ -112,7 +127,7 @@ def calculate_weighted_sum_rating(matrix, user_scores_index, similarity_scores):
         if x in user_scores_index:
             continue
         for y in range(943):
-            if similarity_scores[y] > 0:
+            if similarity_scores[y] > 0.5:
                 numerator[x] += similarity_scores[y] * int(transposed_matrix[x][y]) 
                 denominator[x] += similarity_scores[y]
         try:
