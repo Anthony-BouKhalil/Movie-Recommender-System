@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from flask_login import LoginManager
+import webbrowser
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -42,6 +43,7 @@ def create_app():
         # Check if a user id is stored in the session
         return User.query.get(int(user_id))
 
+    webbrowser.open('http://localhost:5000')
     return app
 
 def create_db(app):
