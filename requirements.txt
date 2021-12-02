@@ -1,5 +1,0 @@
-flask
-flask-login
-Flask-SQLAlchemy
-pathlab
-python-dotenv
