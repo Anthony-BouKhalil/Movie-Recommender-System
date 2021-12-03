@@ -57,7 +57,7 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
             # Remembers the user in the session while the web server is running
-            login_user(user, remember=True)
+            #login_user(user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.movies'))
             
