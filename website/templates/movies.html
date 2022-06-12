@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Movie Recommender System{% endblock %}
+{% block content %}
+
+<h1 align="center">Movies</h1>
+<br/>
+<form method="POST" action="/">
+<div class="row">
+  <div class="column">
+      <b><p>Movie Options</p></b>
+  </div>
+  <div class="column">
+    <b><p>Your Ratings</p></b> 
+  </div>   
+</div>
+
+<div align="center">
+{% for i in range(20) %}
+<select name="movie{{i}}" method="GET" action="/" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+    <option value="{{movies[0]}}" selected>{{movies[0]}}</option>
+    {% for movie in movies[1:] %}
+    <option value="{{movie}}">{{movie}}</option>
+    {% endfor %}
+</select>
+
+<select name="rating{{i}}" class="form-select form-select-sm" aria-label=".form-select-sm example">
+  <option value="Haven't Seen" selected>Haven't Seen</option>
+  {% for i in range(6) %}
+  <option value="{{i}}">{{i}}</option>
+  {% endfor %}
+</select>
+{% endfor %}
+<br/><br/>
+
+<div align="center">
+  <button type="submit" class="btn btn-dark">Click Here for Recommended Movies</button>
+</div>
+</form>
+<br/>
+
+<form method="GET" action="/">
+<div align="center">
+  <button type="submit" class="btn btn-danger">Clear Results</button>
+</div>
+</form>
+
+{% if selected_movies and ratings %}
+<b><p>Your Inputs:</p></b>
+{% for input in inputs %}
+{% if input[0:28] != "You gave Please Pick a Movie" and input[-12:] != "Haven't Seen" %}
+<p>{{ input }}</p>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<b><p>Your Results:</p></b>
+
+{% for out in output %}
+<p>{{ out }}</p>
+{% endfor %}
+
+<br/>
+{% endblock %}
